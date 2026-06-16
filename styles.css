@@ -1,6 +1,7 @@
 /* styles.css — Liquid Glass system per l'app Concerti */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; background: #07070b; }
+html, body { margin: 0; height: 100%; background: #07070b; overscroll-behavior: none; }
+html { background: #07070b; }
 body { font-family: -apple-system, "SF Pro Text", "SF Pro", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
 input, select, textarea { font-family: inherit; }
