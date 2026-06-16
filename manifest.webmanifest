@@ -1,0 +1,13 @@
+{
+  "name": "Concerti",
+  "short_name": "Concerti",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07070b",
+  "theme_color": "#07070b",
+  "icons": [
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}
