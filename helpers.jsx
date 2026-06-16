@@ -59,16 +59,25 @@ function downloadICS(c) {
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
-// Apre direttamente l'app Calendario del telefono: su iPhone il data-URI .ics
-// fa comparire la schermata nativa "Aggiungi al calendario"; su altri sistemi
-// l'evento viene aperto/gestito dall'app calendario predefinita.
+// Genera un file .ics e lo "scarica": su iPhone compare l'anteprima con
+// "Aggiungi al Calendario". Metodo affidabile anche con l'app installata.
 function openCalendar(c) {
-  const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(buildICS(c));
-  const w = window.open(dataUri, '_blank');
-  if (!w) {
+  const ics = buildICS(c);
+  const filename = (c.name ? c.name.replace(/[^\w]+/g, '-').toLowerCase() : 'evento') + '.ics';
+  try {
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = dataUri; a.target = '_blank'; a.rel = 'noopener';
-    document.body.appendChild(a); a.click(); a.remove();
+    a.href = url;
+    a.download = filename;
+    a.rel = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch (e) {
+    // Ripiego: data-URI
+    window.location.href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
   }
 }
 
