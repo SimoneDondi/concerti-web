@@ -17,11 +17,11 @@ input, select, textarea { font-family: inherit; }
 /* absolute (non fixed): su iOS copre tutto lo schermo, mentre i fixed vengono
    ritagliati. Il bordo inferiore si estende oltre l'area di sicurezza (trattino Home). */
 .app-root.phone { position: absolute; top: 0; right: 0; bottom: calc(0px - env(safe-area-inset-bottom) - 30px); left: 0; height: auto; }
-.app-root.phone .screen-head { padding-top: calc(54px + env(safe-area-inset-top)); }
-.app-root.phone .detail-topbar { top: calc(46px + env(safe-area-inset-top)); }
-.app-root.phone .form-topbar { padding-top: calc(48px + env(safe-area-inset-top)); }
-.app-root.phone .theme-btn { top: calc(50px + env(safe-area-inset-top)); }
-.app-root.phone .tabbar { bottom: calc(48px + env(safe-area-inset-bottom)); }
+.app-root.phone .screen-head { padding-top: calc(28px + env(safe-area-inset-top)); }
+.app-root.phone .detail-topbar { top: calc(22px + env(safe-area-inset-top)); }
+.app-root.phone .form-topbar { padding-top: calc(24px + env(safe-area-inset-top)); }
+.app-root.phone .theme-btn { top: calc(24px + env(safe-area-inset-top)); }
+.app-root.phone .tabbar { bottom: calc(36px + env(safe-area-inset-bottom)); }
 .app-root.phone .fab { bottom: calc(90px + env(safe-area-inset-bottom)); }
 .liquid-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden; z-index: 0; }
 .blob { position: absolute; width: 360px; height: 360px; border-radius: 50%;
