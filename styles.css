@@ -1,6 +1,6 @@
 /* styles.css — Liquid Glass system per l'app Concerti */
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { margin: 0; height: 100%; background: #0a0a0d; }
+html, body { margin: 0; height: 100%; background: #07070b; }
 body { font-family: -apple-system, "SF Pro Text", "SF Pro", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 button { font-family: inherit; border: none; background: none; cursor: pointer; color: inherit; }
 input, select, textarea { font-family: inherit; }
@@ -13,7 +13,7 @@ input, select, textarea { font-family: inherit; }
 /* ── App root + sfondo liquido ── */
 .app-root { position: relative; height: 100%; overflow: hidden; }
 /* modalità telefono: a tutto schermo, senza cornice, con safe-area */
-.app-root.phone { position: fixed; inset: 0; height: 100dvh; width: 100vw; }
+.app-root.phone { position: fixed; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: auto; }
 .app-root.phone .screen-head { padding-top: calc(54px + env(safe-area-inset-top)); }
 .app-root.phone .detail-topbar { top: calc(46px + env(safe-area-inset-top)); }
 .app-root.phone .form-topbar { padding-top: calc(48px + env(safe-area-inset-top)); }
