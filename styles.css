@@ -21,7 +21,7 @@ input, select, textarea { font-family: inherit; }
 .app-root.phone .detail-topbar { top: calc(22px + env(safe-area-inset-top)); }
 .app-root.phone .form-topbar { padding-top: calc(24px + env(safe-area-inset-top)); }
 .app-root.phone .theme-btn { top: calc(24px + env(safe-area-inset-top)); }
-.app-root.phone .tabbar { bottom: calc(14px + env(safe-area-inset-bottom)); }
+.app-root.phone .tabbar { bottom: calc(4px + env(safe-area-inset-bottom)); }
 .app-root.phone .fab { bottom: calc(90px + env(safe-area-inset-bottom)); }
 .liquid-bg { position: absolute; top: 0; right: 0; bottom: 0; left: 0; overflow: hidden; z-index: 0; }
 .blob { position: absolute; width: 360px; height: 360px; border-radius: 50%;
