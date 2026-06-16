@@ -14,9 +14,9 @@ input, select, textarea { font-family: inherit; }
 /* ── App root + sfondo liquido ── */
 .app-root { position: relative; height: 100%; overflow: hidden; }
 /* modalità telefono: a tutto schermo, senza cornice, con safe-area */
-/* absolute (non fixed): su iOS copre tutto lo schermo incl. notch e trattino Home,
-   mentre i fixed vengono ritagliati alle aree di sicurezza. */
-.app-root.phone { position: absolute; top: 0; right: 0; bottom: 0; left: 0; height: auto; }
+/* absolute (non fixed): su iOS copre tutto lo schermo, mentre i fixed vengono
+   ritagliati. Il bordo inferiore si estende oltre l'area di sicurezza (trattino Home). */
+.app-root.phone { position: absolute; top: 0; right: 0; bottom: calc(0px - env(safe-area-inset-bottom)); left: 0; height: auto; }
 .app-root.phone .screen-head { padding-top: calc(54px + env(safe-area-inset-top)); }
 .app-root.phone .detail-topbar { top: calc(46px + env(safe-area-inset-top)); }
 .app-root.phone .form-topbar { padding-top: calc(48px + env(safe-area-inset-top)); }
