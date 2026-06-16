@@ -14,16 +14,15 @@ input, select, textarea { font-family: inherit; }
 /* ── App root + sfondo liquido ── */
 .app-root { position: relative; height: 100%; overflow: hidden; }
 /* modalità telefono: a tutto schermo, senza cornice, con safe-area */
-/* Estende lo sfondo oltre le aree di sicurezza (notch/Home) per riempire tutto lo schermo;
-   il contenuto resta al suo posto grazie ai padding safe-area già presenti sotto. */
-.app-root.phone { position: fixed; top: calc(0px - env(safe-area-inset-top)); right: 0; bottom: calc(0px - env(safe-area-inset-bottom)); left: 0; height: auto; }
+.app-root.phone { position: fixed; top: 0; right: 0; bottom: 0; left: 0; height: auto; }
 .app-root.phone .screen-head { padding-top: calc(54px + env(safe-area-inset-top)); }
 .app-root.phone .detail-topbar { top: calc(46px + env(safe-area-inset-top)); }
 .app-root.phone .form-topbar { padding-top: calc(48px + env(safe-area-inset-top)); }
 .app-root.phone .theme-btn { top: calc(50px + env(safe-area-inset-top)); }
 .app-root.phone .tabbar { bottom: calc(18px + env(safe-area-inset-bottom)); }
 .app-root.phone .fab { bottom: calc(90px + env(safe-area-inset-bottom)); }
-.liquid-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+/* Sfondo fisso che deborda oltre i bordi: copre sempre notch e trattino Home. */
+.liquid-bg { position: fixed; top: -100px; right: -100px; bottom: -100px; left: -100px; overflow: hidden; z-index: 0; }
 .blob { position: absolute; width: 360px; height: 360px; border-radius: 50%;
   filter: blur(70px); opacity: 0.85; }
 .light .blob { opacity: 0.6; }
