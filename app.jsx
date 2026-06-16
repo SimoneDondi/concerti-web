@@ -63,6 +63,35 @@ function App() {
     return () => window.removeEventListener('resize', fit);
   }, []);
 
+  // Gesture "scorri dal bordo sinistro per tornare indietro" (come su iPhone).
+  React.useEffect(() => {
+    let startX = 0, startY = 0, tracking = false;
+    function onStart(e) {
+      const p = e.touches[0];
+      tracking = p.clientX <= 28; // solo partendo dal bordo sinistro
+      startX = p.clientX; startY = p.clientY;
+    }
+    function onEnd(e) {
+      if (!tracking) return;
+      tracking = false;
+      const p = e.changedTouches[0];
+      const dx = p.clientX - startX, dy = p.clientY - startY;
+      if (dx > 70 && Math.abs(dy) < 50) {
+        setView(v =>
+          v.name === 'detail' ? { name: 'tabs' }
+          : v.name === 'form' ? (v.edit ? { name: 'detail', id: v.edit.id } : { name: 'tabs' })
+          : v
+        );
+      }
+    }
+    document.addEventListener('touchstart', onStart, { passive: true });
+    document.addEventListener('touchend', onEnd, { passive: true });
+    return () => {
+      document.removeEventListener('touchstart', onStart);
+      document.removeEventListener('touchend', onEnd);
+    };
+  }, []);
+
   const dark = t.dark;
   const accent = t.accent || '#2ed3b7';
 
