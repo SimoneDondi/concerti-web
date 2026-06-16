@@ -101,12 +101,12 @@ function ConcertCard({ c, variant, onOpen }) {
 function Home({ concerts, cardStyle, onOpen, onAdd }) {
   const [filter, setFilter] = React.useState('tutti');
 
-  // Futuri: dal più vicino. Passati: solo dell'anno in corso, dal più recente.
+  // Futuri: dal più vicino. Passati: dal più recente al più vecchio.
   const currentYear = NOW.getFullYear();
   const upcoming = [...concerts].filter(c => isUpcoming(c.date)).sort((a, b) => parseDate(a.date) - parseDate(b.date));
-  const past = [...concerts]
-    .filter(c => !isUpcoming(c.date) && parseDate(c.date).getFullYear() === currentYear)
-    .sort((a, b) => parseDate(b.date) - parseDate(a.date));
+  const pastAll = [...concerts].filter(c => !isUpcoming(c.date)).sort((a, b) => parseDate(b.date) - parseDate(a.date));
+  // Nella vista "Tutti" mostriamo solo i passati dell'anno in corso; il filtro "Passati" mostra tutti gli anni.
+  const pastYear = pastAll.filter(c => parseDate(c.date).getFullYear() === currentYear);
 
   const card = (c) => <ConcertCard key={c.id} c={c} variant={cardStyle} onOpen={onOpen} />;
   const sectionLabel = (text) => (
@@ -133,14 +133,14 @@ function Home({ concerts, cardStyle, onOpen, onAdd }) {
 
       <div className="card-stack" style={{ paddingTop: 18 }}>
         {filter === 'arrivo' && (upcoming.length ? upcoming.map(card) : empty)}
-        {filter === 'passati' && (past.length ? past.map(card) : empty)}
+        {filter === 'passati' && (pastAll.length ? pastAll.map(card) : empty)}
         {filter === 'tutti' && (
-          upcoming.length === 0 && past.length === 0 ? empty : (
+          upcoming.length === 0 && pastYear.length === 0 ? empty : (
             <React.Fragment>
               {upcoming.length > 0 && sectionLabel('In arrivo')}
               {upcoming.map(card)}
-              {past.length > 0 && sectionLabel('Passati')}
-              {past.map(card)}
+              {pastYear.length > 0 && sectionLabel('Passati')}
+              {pastYear.map(card)}
             </React.Fragment>
           )
         )}

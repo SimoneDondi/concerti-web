@@ -94,7 +94,8 @@ const LS_KEY = 'concerti_v1';
 function loadConcerts() {
   try {
     const raw = localStorage.getItem(LS_KEY);
-    if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr) && arr.length) return arr; }
+    // Accetta anche una lista vuota: una volta usato l'app, non ri-carica i dati di esempio.
+    if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; }
   } catch (e) {}
   return SEED.map(c => ({ ...c }));
 }
