@@ -200,7 +200,11 @@ function ConcertForm({ initial, allFriends, onCancel, onSave }) {
     if (v && !friends.includes(v)) setFriends([...friends, v]);
     setFInput('');
   }
-  const suggestions = (allFriends || []).filter(f => !friends.includes(f)).slice(0, 6);
+  const fq = fInput.trim().toLowerCase();
+  const suggestions = (allFriends || [])
+    .filter(f => !friends.includes(f))
+    .filter(f => !fq || f.toLowerCase().includes(fq))
+    .slice(0, fq ? 8 : 6);
   const valid = name.trim() && date && venue.trim() && city.trim();
 
   function save() {
