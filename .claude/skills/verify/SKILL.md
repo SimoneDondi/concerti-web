@@ -41,8 +41,8 @@ const ctx = await browser.newContext({ viewport: { width: 402, height: 874 } });
 
 ## Sync cloud (Supabase)
 
-- Backend: progetto Supabase `sanfa-dashboard` (bsrmrffhaqzfjeqealnm), tabella `public.concerti` (righe per utente via RLS, tombstone `deleted=true`). URL e publishable key sono hardcoded in sync.jsx.
-- Signup in-app funziona senza conferma email (il progetto ha l'autoconferma attiva): il test può creare account `claude-verify-<ts>@example.org` e a fine verifica eliminarli con `delete from auth.users where email like 'claude-verify-%'` (cascade sulle righe).
+- Backend: progetto Supabase dedicato `concerti` (lpvckprrcvxmkbyxukru, account personale "Momo Org"), tabella `public.concerti` (righe per utente via RLS, tombstone `deleted=true`). URL e publishable key sono hardcoded in sync.jsx.
+- La registrazione passa dalla edge function `signup` (crea l'account già confermato via admin API): il signup diretto GoTrue fallirebbe con `email_address_invalid` perché l'SMTP integrato consegna solo ai membri del team. Il test può creare account `claude-verify-<ts>@example.org` e a fine verifica eliminarli con `delete from auth.users where email like 'claude-verify-%'` (cascade sulle righe).
 - Bottone cloud = primo dei tre `button.theme-btn.round-btn`; il foglio backup è `.sheet`.
 - Playwright: NON usare `text=Accedi` (combacia col testo di aiuto) — usare `.sheet button.btn-accent`. Per il confirm di eliminazione usare `page.locator('.sheet button', { hasText: 'Elimina' })` (il titolo "Eliminare il concerto?" è un div).
 - Push debounced 1.5s: attendere ~4s dopo una modifica prima di controllare il server.

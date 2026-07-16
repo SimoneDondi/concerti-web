@@ -4,8 +4,8 @@
 // le cancellazioni viaggiano come righe deleted=true (tombstone) per non far
 // "risorgere" i concerti eliminati al merge successivo.
 
-const SB_URL = 'https://bsrmrffhaqzfjeqealnm.supabase.co';
-const SB_KEY = 'sb_publishable_y9u0TZd4MSPnscT-bZtrnw_1-aBNMov';
+const SB_URL = 'https://lpvckprrcvxmkbyxukru.supabase.co';
+const SB_KEY = 'sb_publishable_TOoDEHRcNKUy3xiKVLmSig_rTDLCTPR';
 const sbClient = (typeof supabase !== 'undefined' && supabase.createClient)
   ? supabase.createClient(SB_URL, SB_KEY)
   : null; // CDN non raggiunto: l'app funziona comunque, solo senza backup
@@ -178,7 +178,18 @@ function useCloudSync(concerts, setConcerts) {
     await saveMeta(meta);
   }).then(schedulePush), [schedulePush]);
 
-  return { available: !!sbClient, user, status, lastSync, syncNow, markChanged, markDeleted,
+  // la registrazione passa dalla edge function `signup` (account già confermato:
+  // l'SMTP integrato di Supabase non consegna l'email di conferma fuori dal team)
+  const signup = React.useCallback(async (email, password) => {
+    const { error } = await sbClient.functions.invoke('signup', { body: { email, password } });
+    if (error) {
+      let m = error.message;
+      try { const j = await error.context.json(); if (j && j.error) m = j.error; } catch (e) {}
+      throw new Error(m);
+    }
+  }, []);
+
+  return { available: !!sbClient, user, status, lastSync, syncNow, markChanged, markDeleted, signup,
     auth: sbClient ? sbClient.auth : null };
 }
 
@@ -196,13 +207,9 @@ function SyncSheet({ open, onClose, sync }) {
     setBusy(true); setMsg('');
     try {
       if (mode === 'signup') {
-        const { data, error } = await sync.auth.signUp({ email: mail, password: pw });
-        if (error) throw error;
-        if (!(data && data.session)) {
-          // progetto con conferma email attiva: prova comunque il login diretto
-          const { error: e2 } = await sync.auth.signInWithPassword({ email: mail, password: pw });
-          if (e2) { setMsg('Account creato: conferma dal link ricevuto via email, poi tocca Accedi.'); return; }
-        }
+        await sync.signup(mail, pw);
+        const { error: e2 } = await sync.auth.signInWithPassword({ email: mail, password: pw });
+        if (e2) throw e2;
       } else {
         const { error } = await sync.auth.signInWithPassword({ email: mail, password: pw });
         if (error) throw error;
