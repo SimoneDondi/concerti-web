@@ -99,18 +99,67 @@ const SEED = [
 ];
 
 // ───────────────────────── Persistenza ─────────────────────────
+// I dati vivono in IndexedDB: quota ampia (i PDF dei biglietti non la esauriscono)
+// e niente perdite silenziose. localStorage resta solo come sorgente di
+// migrazione dalle versioni precedenti dell'app.
 const LS_KEY = 'concerti_v1';
-function loadConcerts() {
+const DB_NAME = 'concerti';
+const DB_STORE = 'kv';
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => { req.result.createObjectStore(DB_STORE); };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+function idbGet(key) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const rq = db.transaction(DB_STORE, 'readonly').objectStore(DB_STORE).get(key);
+    rq.onsuccess = () => resolve(rq.result);
+    rq.onerror = () => reject(rq.error);
+  }));
+}
+function idbSet(key, value) {
+  return openDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put(value, key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error);
+  }));
+}
+
+// Accetta anche una lista vuota: una volta usata l'app, non ri-carica gli esempi.
+async function loadConcerts() {
+  try {
+    const arr = await idbGet(LS_KEY);
+    if (Array.isArray(arr)) return arr;
+  } catch (e) {}
+  // migrazione una tantum da localStorage; l'originale si rimuove solo a copia riuscita
   try {
     const raw = localStorage.getItem(LS_KEY);
-    // Accetta anche una lista vuota: una volta usato l'app, non ri-carica i dati di esempio.
-    if (raw) { const arr = JSON.parse(raw); if (Array.isArray(arr)) return arr; }
+    if (raw) {
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) {
+        idbSet(LS_KEY, arr).then(() => localStorage.removeItem(LS_KEY)).catch(() => {});
+        return arr;
+      }
+    }
   } catch (e) {}
   return SEED.map(c => ({ ...c }));
 }
+
+let saveFailedWarned = false;
 function saveConcerts(list) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(list)); }
-  catch (e) { /* quota: i PDF possono essere grandi, ignoriamo */ }
+  idbSet(LS_KEY, list).catch((e) => {
+    console.error('Salvataggio concerti non riuscito', e);
+    if (!saveFailedWarned) {
+      saveFailedWarned = true;
+      alert('Attenzione: non riesco a salvare i concerti su questo dispositivo. Le ultime modifiche potrebbero andare perse alla chiusura dell\'app.');
+    }
+  });
 }
 function newId() { return 'c' + Math.random().toString(36).slice(2, 9); }
 

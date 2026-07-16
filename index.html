@@ -29,7 +29,7 @@
   </svg>
 </template>
 
-<script type="text/babel" src="helpers.jsx?v=14"></script>
+<script type="text/babel" src="helpers.jsx?v=15"></script>
 <script type="text/babel" src="ios-frame.jsx?v=14"></script>
 <script type="text/babel" src="glass.jsx?v=14"></script>
 <script type="text/babel" src="home.jsx?v=14"></script>
@@ -37,11 +37,13 @@
 <script type="text/babel" src="stats.jsx?v=14"></script>
 <script type="text/babel" src="search.jsx?v=14"></script>
 <script type="text/babel" src="tweaks-panel.jsx?v=14"></script>
-<script type="text/babel" src="app.jsx?v=14"></script>
+<script type="text/babel" src="app.jsx?v=15"></script>
 <script type="text/babel" data-presets="react">
   window.__PHONE__ = true;
+  // Chiede al browser di non cancellare lo storage quando fa pulizia automatica.
+  if (navigator.storage && navigator.storage.persist) { navigator.storage.persist().catch(() => {}); }
   const root = ReactDOM.createRoot(document.getElementById('root'));
-  root.render(<App />);
+  loadConcerts().then(list => root.render(<App initialConcerts={list} />));
 </script>
 </body>
 </html>

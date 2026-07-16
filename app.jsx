@@ -42,9 +42,9 @@ function TabBar({ tab, onTab }) {
   );
 }
 
-function App() {
+function App({ initialConcerts }) {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
-  const [concerts, setConcerts] = React.useState(loadConcerts);
+  const [concerts, setConcerts] = React.useState(() => initialConcerts);
   const [tab, setTab] = React.useState('home');
   const [view, setView] = React.useState({ name: 'tabs' });
   const [confirm, setConfirm] = React.useState(null);
