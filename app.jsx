@@ -48,6 +48,8 @@ function App({ initialConcerts }) {
   const [tab, setTab] = React.useState('home');
   const [view, setView] = React.useState({ name: 'tabs' });
   const [confirm, setConfirm] = React.useState(null);
+  const [syncOpen, setSyncOpen] = React.useState(false);
+  const sync = useCloudSync(concerts, setConcerts);
 
   React.useEffect(() => { saveConcerts(concerts); }, [concerts]);
 
@@ -96,9 +98,14 @@ function App({ initialConcerts }) {
   const accent = t.accent || '#2ed3b7';
 
   function upsert(c) {
+    c = { ...c, updatedAt: new Date().toISOString() };
     setConcerts(list => list.some(x => x.id === c.id) ? list.map(x => x.id === c.id ? c : x) : [c, ...list]);
+    sync.markChanged(c.id);
   }
-  function remove(id) { setConcerts(list => list.filter(x => x.id !== id)); }
+  function remove(id) {
+    setConcerts(list => list.filter(x => x.id !== id));
+    sync.markDeleted(id);
+  }
 
   function openDetail(c) { setView({ name: 'detail', id: c.id }); }
   function openNew(draft) { setView({ name: 'form', draft: draft || null }); }
@@ -152,9 +159,13 @@ function App({ initialConcerts }) {
         )}
       </div>
 
-      {/* azioni in alto a destra: aggiungi + tema */}
+      {/* azioni in alto a destra: backup + aggiungi + tema */}
       {view.name === 'tabs' && (
         <React.Fragment>
+          <button className="theme-btn round-btn" style={{ right: 108, color: sync.status === 'error' ? '#ff5c5c' : undefined }}
+            onClick={() => setSyncOpen(true)}>
+            <Icon name="cloud" size={21} />
+          </button>
           <button className="theme-btn round-btn" style={{ right: 62 }} onClick={() => openNew()}>
             <Icon name="plus" size={22} stroke={2.4} />
           </button>
@@ -168,6 +179,9 @@ function App({ initialConcerts }) {
       {view.name === 'tabs' && (
         <TabBar tab={tab} onTab={(id) => { setTab(id); setView({ name: 'tabs' }); }} />
       )}
+
+      {/* backup / account cloud */}
+      <SyncSheet open={syncOpen} onClose={() => setSyncOpen(false)} sync={sync} />
 
       {/* conferma eliminazione */}
       <Sheet open={!!confirm} onClose={() => setConfirm(null)} title="Eliminare il concerto?">

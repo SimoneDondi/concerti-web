@@ -34,6 +34,7 @@ function Icon({ name, size = 24, stroke = 1.8, style = {}, fill = false }) {
     sparkle: <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />,
     filter: <path d="M3 5h18l-7 8v6l-4 2v-8L3 5Z" />,
     key: <g><circle cx="8" cy="8" r="4" /><path d="M11 11l9 9M16 16l2-2M19 19l2-2" /></g>,
+    cloud: <path d="M7 18.5a4.5 4.5 0 0 1-.35-8.99A5.5 5.5 0 0 1 17.4 10.1a4.2 4.2 0 0 1-.4 8.4H7Z" />,
   };
   return <svg {...common} fill={fill ? 'currentColor' : 'none'}>{P[name] || null}</svg>;
 }

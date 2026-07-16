@@ -39,6 +39,14 @@ const ctx = await browser.newContext({ viewport: { width: 402, height: 874 } });
 - Lista vuota salvata = niente ri-seed dei dati di esempio al reload.
 - `loadConcerts`/`saveConcerts` sono esposti su `window` (comodi per probe via `page.evaluate`).
 
+## Sync cloud (Supabase)
+
+- Backend: progetto Supabase `sanfa-dashboard` (bsrmrffhaqzfjeqealnm), tabella `public.concerti` (righe per utente via RLS, tombstone `deleted=true`). URL e publishable key sono hardcoded in sync.jsx.
+- Signup in-app funziona senza conferma email (il progetto ha l'autoconferma attiva): il test può creare account `claude-verify-<ts>@example.org` e a fine verifica eliminarli con `delete from auth.users where email like 'claude-verify-%'` (cascade sulle righe).
+- Bottone cloud = primo dei tre `button.theme-btn.round-btn`; il foglio backup è `.sheet`.
+- Playwright: NON usare `text=Accedi` (combacia col testo di aiuto) — usare `.sheet button.btn-accent`. Per il confirm di eliminazione usare `page.locator('.sheet button', { hasText: 'Elimina' })` (il titolo "Eliminare il concerto?" è un div).
+- Push debounced 1.5s: attendere ~4s dopo una modifica prima di controllare il server.
+
 ## Gotcha
 
 - Bump di `?v=` in index.html quando si tocca un file .jsx (convenzione cache-busting del repo).

@@ -197,6 +197,6 @@ Object.assign(window, {
   fmtEuro, fmtEuro2, fmtDate, fmtDateLong, fmtTime, fmtDayNum, fmtMonthAbbr,
   MESI, MESI_ABBR, GIORNI, NOW, parseDate, isUpcoming, daysUntil,
   gmapsUrl, appleMapsUrl, buildICS, downloadICS, openCalendar,
-  SEED, loadConcerts, saveConcerts, newId, getApiKey, setApiKey,
+  SEED, loadConcerts, saveConcerts, newId, getApiKey, setApiKey, idbGet, idbSet,
   byYear, byMonth, sumCost, topCities, topFriends, yearsPresent, monthlySpend,
 });
