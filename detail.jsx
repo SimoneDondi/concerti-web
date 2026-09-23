@@ -184,7 +184,8 @@ function ConcertForm({ initial, allFriends, onCancel, onSave }) {
   const init = initial || {};
   const [name, setName] = React.useState(init.name || '');
   const d = init.date ? parseDate(init.date) : null;
-  const [date, setDate] = React.useState(d ? d.toISOString().slice(0, 10) : '');
+  // data locale: toISOString è in UTC e sposterebbe al giorno prima i concerti dopo mezzanotte
+  const [date, setDate] = React.useState(d ? `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}` : '');
   const [time, setTime] = React.useState(d ? `${pad2(d.getHours())}:${pad2(d.getMinutes())}` : '21:00');
   const [cost, setCost] = React.useState(init.cost != null ? String(init.cost) : '');
   const [venue, setVenue] = React.useState(init.venue || '');

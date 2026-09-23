@@ -53,6 +53,17 @@ function App({ initialConcerts }) {
 
   React.useEffect(() => { saveConcerts(concerts); }, [concerts]);
 
+  // L'app in Home resta sospesa in background anche per giorni: ridisegna al
+  // ritorno in primo piano e ogni minuto, così "Oggi", i countdown e la
+  // divisione prossimi/passati seguono la data reale.
+  const [, setClock] = React.useState(0);
+  React.useEffect(() => {
+    const tick = () => { if (!document.hidden) setClock(Date.now()); };
+    const id = setInterval(tick, 60000);
+    document.addEventListener('visibilitychange', tick);
+    return () => { clearInterval(id); document.removeEventListener('visibilitychange', tick); };
+  }, []);
+
   // scaling del mockup per riempire il viewport
   const scalerRef = React.useRef(null);
   React.useEffect(() => {

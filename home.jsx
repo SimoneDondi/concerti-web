@@ -102,7 +102,7 @@ function Home({ concerts, cardStyle, onOpen, onAdd }) {
   const [filter, setFilter] = React.useState('tutti');
 
   // Futuri: dal più vicino. Passati: dal più recente al più vecchio.
-  const currentYear = NOW.getFullYear();
+  const currentYear = now().getFullYear();
   const upcoming = [...concerts].filter(c => isUpcoming(c.date)).sort((a, b) => parseDate(a.date) - parseDate(b.date));
   const pastAll = [...concerts].filter(c => !isUpcoming(c.date)).sort((a, b) => parseDate(b.date) - parseDate(a.date));
   // Nella vista "Tutti" mostriamo solo i passati dell'anno in corso; il filtro "Passati" mostra tutti gli anni.

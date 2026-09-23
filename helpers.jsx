@@ -20,9 +20,12 @@ function fmtTime(iso) { const d = parseDate(iso); return `${String(d.getHours())
 function fmtDayNum(iso) { return String(parseDate(iso).getDate()).padStart(2,'0'); }
 function fmtMonthAbbr(iso) { return MESI_ABBR[parseDate(iso).getMonth()].toUpperCase(); }
 
-const NOW = new Date(); // data reale del dispositivo
-function isUpcoming(iso) { return parseDate(iso).getTime() >= NOW.getTime(); }
-function daysUntil(iso) { return Math.ceil((parseDate(iso) - NOW) / 86400000); }
+// data reale del dispositivo, letta ogni volta: l'app può restare aperta per giorni
+function now() { return new Date(); }
+function isUpcoming(iso) { return parseDate(iso).getTime() >= Date.now(); }
+// giorni di calendario (non blocchi di 24h): stasera = 0, domani = 1; round assorbe i giorni di 23/25h del cambio d'ora
+function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+function daysUntil(iso) { return Math.round((startOfDay(parseDate(iso)) - startOfDay(now())) / 86400000); }
 
 // ───────────────────────── Mappe ─────────────────────────
 function gmapsUrl(q) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`; }
@@ -195,7 +198,7 @@ function monthlySpend(list, year) {
 
 Object.assign(window, {
   fmtEuro, fmtEuro2, fmtDate, fmtDateLong, fmtTime, fmtDayNum, fmtMonthAbbr,
-  MESI, MESI_ABBR, GIORNI, NOW, parseDate, isUpcoming, daysUntil,
+  MESI, MESI_ABBR, GIORNI, now, parseDate, isUpcoming, daysUntil,
   gmapsUrl, appleMapsUrl, buildICS, downloadICS, openCalendar,
   SEED, loadConcerts, saveConcerts, newId, getApiKey, setApiKey, idbGet, idbSet,
   byYear, byMonth, sumCost, topCities, topFriends, yearsPresent, monthlySpend,

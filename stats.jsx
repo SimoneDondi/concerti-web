@@ -47,13 +47,14 @@ function RankRow({ rank, title, sub, count, max, avatar, unit }) {
 
 function Stats({ concerts }) {
   const years = yearsPresent(concerts);
-  const [scope, setScope] = React.useState(years.includes(2026) ? '2026' : (years[0] ? String(years[0]) : 'all'));
+  const thisYear = now().getFullYear();
+  const [scope, setScope] = React.useState(years.includes(thisYear) ? String(thisYear) : (years[0] ? String(years[0]) : 'all'));
 
   const isAll = scope === 'all';
   const year = isAll ? null : Number(scope);
   const inScope = isAll ? concerts : byYear(concerts, year);
 
-  const curMonth = NOW.getMonth(); // giugno = 5
+  const curMonth = now().getMonth(); // 0 = gennaio
   const monthList = isAll ? concerts.filter(c => parseDate(c.date).getMonth() === curMonth)
     : byMonth(concerts, year, curMonth);
 
