@@ -199,6 +199,7 @@ function SyncSheet({ open, onClose, sync }) {
   const [pw, setPw] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [msg, setMsg] = React.useState('');
+  const push = usePushReminders(sync.user);
 
   async function doAuth(mode) {
     if (!sync.auth || busy) return;
@@ -241,12 +242,14 @@ function SyncSheet({ open, onClose, sync }) {
               style={{ width: '100%', height: 48, marginTop: 10 }}>
               <Icon name="cloud" size={18} /> Sincronizza ora
             </GlassButton>
+            <ReminderSection push={push} />
+            {/* i promemoria seguono l'account: uscendo, questo dispositivo smette di riceverli */}
             <button className="link-btn" style={{ width: '100%', marginTop: 12 }}
-              onClick={async () => { await sync.auth.signOut(); }}>Esci dall'account</button>
+              onClick={async () => { if (push.state === 'on') await push.disable().catch(() => {}); await sync.auth.signOut(); }}>Esci dall'account</button>
           </React.Fragment>
         ) : (
           <React.Fragment>
-            <p className="key-help">I concerti restano salvati sul telefono e in più vengono copiati sul cloud: se cambi telefono o perdi i dati, accedi e ritrovi tutto.</p>
+            <p className="key-help">I concerti restano salvati sul telefono e in più vengono copiati sul cloud: se cambi telefono o perdi i dati, accedi e ritrovi tutto. Con l'accesso puoi anche attivare i promemoria la sera prima dei concerti.</p>
             <input className="inp" type="email" autoComplete="email" placeholder="email"
               value={email} onChange={e => setEmail(e.target.value)} style={{ marginTop: 10 }} />
             <input className="inp" type="password" autoComplete="current-password" placeholder="password (min 6)"
@@ -263,4 +266,4 @@ function SyncSheet({ open, onClose, sync }) {
   );
 }
 
-Object.assign(window, { useCloudSync, SyncSheet });
+Object.assign(window, { useCloudSync, SyncSheet, sbClient });
